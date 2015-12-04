@@ -1,11 +1,11 @@
 package discoverylab.telebot.master.arms.mapper;
 
 import static discoverylab.util.logging.LogUtils.*;
-import discoverylab.telebot.master.arms.TelebotMasterArmsTCPComponent;
-import discoverylab.telebot.master.arms.model.YEIDataModel;
+import discoverylab.telebot.master.arms.TelebotMasterArmsTCPKinectComponent;
+import discoverylab.telebot.master.arms.model.KinectDataModel;
 
-public class ServoDataMapper extends Mapper{
-	public static String TAG = makeLogTag(ServoDataMapper.class);
+public class KinectDataMapper extends Mapper{
+	public static String TAG = makeLogTag(KinectDataMapper.class);
 	@Override
 	public int constrain(int val, int servo_max, int servo_min)
 	{

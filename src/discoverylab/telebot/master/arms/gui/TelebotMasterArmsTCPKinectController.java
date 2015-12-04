@@ -18,15 +18,52 @@ public class TelebotMasterArmsTCPKinectController
 		this.view.addConnectListener(new ConnectListener());
 	}
 	
+	public class DataListener
+	{
+		public void changeText(String joint, String data)
+		{
+			String jointType = joint;
+			String jointData = data;
+			
+
+			if(jointType.equals("left_shoulder"))
+			{
+				view.setTextLeftSh(jointData);
+			}
+			else if(jointType.equals("left_elbow"))
+			{
+				view.setTextLeftEl(jointData);
+			}
+			else if(jointType.equals("left_wrist"))
+			{
+				view.setTextLeftWr(jointData);
+			}
+			else if(jointType.equals("right_shoulder"))
+			{
+				view.setTextRightSh(jointData);
+			}
+			else if(jointType.equals("right_elbow"))
+			{
+				view.setTextRightEl(jointData);
+			}
+			else if(jointType.equals("right_wrist"))
+			{
+				view.setTextRightWr(jointData);
+			}
+		}
+	}
+	
 	class ConnectListener implements ActionListener
 	{
+		DataListener listener = new DataListener();
+		
 		public void actionPerformed(ActionEvent e)
 		{
 			try
 			{
 				int portNumber = view.getPortNumber();
 				
-				telebotMasterArms = new TelebotMasterArmsTCPKinectComponent(portNumber);
+				telebotMasterArms = new TelebotMasterArmsTCPKinectComponent(listener, portNumber);
 				
 				//Initiate Slave Component Device
 				telebotMasterArms.initiate();

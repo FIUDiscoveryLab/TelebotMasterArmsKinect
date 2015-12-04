@@ -3,7 +3,9 @@ package discoverylab.telebot.master.arms;
 import static discoverylab.util.logging.LogUtils.*;
 import discoverylab.telebot.master.arms.configurations.MasterArmsConfig;
 import discoverylab.telebot.master.arms.configurations.SensorConfig;
-import discoverylab.telebot.master.arms.mapper.ServoDataMapper;
+import discoverylab.telebot.master.arms.gui.TelebotMasterArmsTCPKinectController;
+import discoverylab.telebot.master.arms.gui.TelebotMasterArmsTCPKinectController.DataListener;
+import discoverylab.telebot.master.arms.mapper.KinectDataMapper;
 import discoverylab.telebot.master.arms.model.KinectDataModel;
 
 import com.rti.dds.infrastructure.InstanceHandle_t;
@@ -20,7 +22,8 @@ public class TelebotMasterArmsTCPKinectComponent extends CoreMasterTCPComponent 
 	public static String TAG = makeLogTag(TelebotMasterArmsTCPKinectComponent.class);
 	
 	private KinectDataParser parser;
-	private ServoDataMapper mapper;
+	private KinectDataMapper mapper;
+	private DataListener listener;
 	
 	private int defaultSpeed = 100;
 	
@@ -30,10 +33,11 @@ public class TelebotMasterArmsTCPKinectComponent extends CoreMasterTCPComponent 
 	TMasterToArms instance = new TMasterToArms();
 	InstanceHandle_t instance_handle = InstanceHandle_t.HANDLE_NIL;
 	
-	public TelebotMasterArmsTCPKinectComponent(int portNumber) {
+	public TelebotMasterArmsTCPKinectComponent(DataListener listener, int portNumber) {
 		super(portNumber);
 		parser = new KinectDataParser();
-		mapper = new ServoDataMapper();
+		mapper = new KinectDataMapper();
+		this.listener = listener;
 		
 		jointPositions = new int[14];
 		
@@ -59,6 +63,9 @@ public class TelebotMasterArmsTCPKinectComponent extends CoreMasterTCPComponent 
 		KinectDataModel kinectDataInstance = (KinectDataModel) parser.parse(data);
 		
 		String jointType = kinectDataInstance.getJointType();
+		
+		listener.changeText(jointType, data);
+		
 		int x, y, z;
 		int servoOnePosition, servoTwoPosition;
 		
